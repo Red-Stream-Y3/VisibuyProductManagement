@@ -20,7 +20,9 @@ const theme = createTheme({
         }),
         primaryLight: "#73a2fa",
         icon: "#000",
+        buttonIcon: "#fff",
         text: "#000",
+        buttonText: "#fff",
     },
     darkColors: {
         ...Platform.select({
@@ -30,7 +32,9 @@ const theme = createTheme({
         }),
         primaryLight: "#302f2f",
         icon: "#fff",
+        buttonIcon: "#000",
         text: "#fff",
+        buttonText: "#000",
     },
 });
 
@@ -38,6 +42,23 @@ const theme = createTheme({
 
 export default function App() {
     const [tab, setTab] = React.useState("main");
+    const [newProduct, setNewProduct] = React.useState({});
+
+    const resetNewProduct = () => {
+        setNewProduct({
+            name: "",
+            size: "",
+            price: "",
+            color: "",
+            images: new Array(),
+        });
+    };
+
+    //initialize newProduct
+    React.useEffect(() => {
+        resetNewProduct();
+    }, []);
+
     const positionOffset = -100;
     const opacityOffset = 1;
     const animDuration = 200;
@@ -105,7 +126,7 @@ export default function App() {
                     width: '100%',
                     }}>
                     {tab === "main" && <MainMenu setTab={setTab} />}
-                    {tab === "new" && <NewProduct />}
+                    {tab === "new" && <NewProduct newProduct={newProduct} setNewProduct={setNewProduct} resetProduct={resetNewProduct} />}
                     {tab === "view" && <ViewProducts />}
                 </View>
                 

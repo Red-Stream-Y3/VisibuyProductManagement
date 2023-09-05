@@ -22,13 +22,13 @@ export const MainMenu = (props) => {
                 title="Add Product"
                 rippleColor="#4233b5e5"
                 onPress={()=>props.setTab("new")}>
-                <Icon name="add-circle" size={50} color={theme.colors.icon} />
+                <Icon name="add-circle" size={50} color={theme.colors.buttonIcon} />
             </CustomButton>
             <CustomButton
                 title="View Product"
                 rippleColor="#4233b5e5"
                 onPress={()=>props.setTab("view")}>
-                <Icon name="visibility" size={50} color={theme.colors.icon} />
+                <Icon name="visibility" size={50} color={theme.colors.buttonIcon} />
             </CustomButton>
         </View>
     );
