@@ -43,10 +43,12 @@ const theme = createTheme({
 export default function App() {
     const [tab, setTab] = React.useState("main");
     const [newProduct, setNewProduct] = React.useState({});
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     const resetNewProduct = () => {
         setNewProduct({
             name: "",
+            category: "",
             size: "",
             price: "",
             color: "",
@@ -126,7 +128,7 @@ export default function App() {
                     justifyContent: 'center',
                     width: '100%',
                     }}>
-                    {tab === "main" && <MainMenu setTab={setTab} />}
+                    {tab === "main" && <MainMenu setTab={setTab} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} />}
                     {tab === "new" && <NewProduct newProduct={newProduct} setNewProduct={setNewProduct} resetProduct={resetNewProduct} />}
                     {tab === "view" && <ViewProducts />}
                 </View>

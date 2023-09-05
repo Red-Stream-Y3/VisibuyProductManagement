@@ -1,12 +1,22 @@
 import React from "react";
 import { Button, Card, Icon, Input, useTheme } from "@rneui/themed";
-import { View, Text, ToastAndroid, ScrollView } from "react-native";
+import { View, Text, ToastAndroid, ScrollView, Pressable } from "react-native";
 import { containerStyles, textStyles } from "../Styles";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "@rneui/base/dist";
+import { Dropdown } from "react-native-element-dropdown";
+
+export const CATEGORY = {
+    HOME: "homegoods-v2",
+    FASHION: "apparel-v2",
+    TOYS: "toys-v2",
+    PACK: "packagedgoods-v1",
+    GENERAL: "general-v1",
+};
 
 export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
     const { theme } = useTheme();
+    const [dropdown, setDropdown] = React.useState("Category");
     //const [image, setImage] = React.useState(null);
 
     const showToast = (message) => {
@@ -84,6 +94,48 @@ export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
                 containerStyle={containerStyles.inputContainer}
                 placeholder="Product Name"
             />
+
+            <View style={{ width: "80%", marginBottom: 10 }}>
+                <Dropdown
+                    data={[
+                        { label: "Home Goods", value: CATEGORY.HOME },
+                        { label: "Fashion", value: CATEGORY.FASHION },
+                        { label: "Toys", value: CATEGORY.TOYS },
+                        { label: "Packed Goods", value: CATEGORY.PACK },
+                        { label: "General", value: CATEGORY.GENERAL },
+                    ]}
+                    style={textStyles.body}
+                    value={newProduct.category}
+                    onChange={(item) =>{
+                        setNewProduct({ ...newProduct, category: item.value });
+                        setDropdown(item.label);
+                    }}
+                    placeholder={dropdown}
+                    placeholderStyle={{ color: theme.colors.grey3, fontSize: 16 }}
+                    renderItem={(item) => {
+                        return (
+                            <View
+                                style={{
+                                    paddingVertical: 17,
+                                    paddingHorizontal: 4,
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}>
+                                <Text
+                                    style={{
+                                        flex: 1,
+                                        fontSize: 16,
+                                        paddingHorizontal: 10,
+                                    }}>
+                                    {item.label}
+                                </Text>
+                            </View>
+                        );
+                    }}
+                />
+            </View>
+
             <Input
                 value={newProduct.price}
                 onChangeText={(text) =>
@@ -159,7 +211,7 @@ export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
                         newProduct.images.map((image, index) => {
                             return (
                                 <View key={index}>
-                                    <Card>
+                                    <Card containerStyle={{ borderRadius: 5 }}>
                                         <Card.Image
                                             source={{ uri: image }}
                                             style={{ width: 150, height: 150 }}
@@ -173,6 +225,13 @@ export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
                                                         (img, i) => i !== index
                                                     ),
                                                 });
+                                            }}
+                                            containerStyle={{
+                                                margin: 5,
+                                                borderRadius: 5,
+                                            }}
+                                            titleStyle={{
+                                                color: theme.colors.buttonText,
                                             }}>
                                             <Icon
                                                 name="delete"
@@ -187,9 +246,14 @@ export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
             </View>
 
             <Button
-                onPress={() => {showToast("Product added successfully");}}
+                onPress={() => {
+                    showToast("Product added successfully");
+                }}
                 containerStyle={{ margin: 20, borderRadius: 5 }}
-                titleStyle={{ ...textStyles.mainButtonText, color: theme.colors.buttonText }}>
+                titleStyle={{
+                    ...textStyles.mainButtonText,
+                    color: theme.colors.buttonText,
+                }}>
                 <Icon
                     containerStyle={{ marginEnd: 5 }}
                     name="image"

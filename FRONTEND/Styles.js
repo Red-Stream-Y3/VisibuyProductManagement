@@ -22,6 +22,13 @@ export const containerStyles = StyleSheet.create({
     inputContainer: {
         width: '90%',
     },
+    mainMenuCard: {
+        width: '90%',
+        height: '90%',
+        flex: 1,
+        borderRadius: 5,
+        marginBottom: '5%',
+    },
 });
 
 export const textStyles = StyleSheet.create({

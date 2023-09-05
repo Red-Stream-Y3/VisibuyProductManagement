@@ -9,7 +9,7 @@ const location = process.env.GOOGLE_PROJECT_LOCATION;
 const locationPath = client.locationPath(projectId, location);
 
 //constants
-const Categories = {
+export const CATEGORY = {
     HOME: "homegoods-v2",
     FASHION: "apparel-v2",
     TOYS: "toys-v2",
