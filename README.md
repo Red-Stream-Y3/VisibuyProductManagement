@@ -2,17 +2,17 @@
 A seperate product management app for Visibuy
 
 # COMMANDS LIST
-# Build app
+## Build app
 npx eas build -p android --profile dev
 
-# Run build
+## Run build
 npx eas build:run -p android
 
-# Update build
+## Update build
 npx eas update --branch dev --message "Updating the app"
 
-# Start local server
+## Start local server
 npx expo start --dev-client
 
-# Clear cache and start local server
+## Clear cache and start local server
 npx expo start --dev-client --reset-cache
