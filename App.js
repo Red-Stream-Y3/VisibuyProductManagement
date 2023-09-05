@@ -50,6 +50,7 @@ export default function App() {
             size: "",
             price: "",
             color: "",
+            description: "",
             images: new Array(),
         });
     };

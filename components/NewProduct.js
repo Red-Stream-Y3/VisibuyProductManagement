@@ -112,6 +112,15 @@ export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
                 containerStyle={containerStyles.inputContainer}
                 placeholder="Package color"
             />
+            <Input
+                value={newProduct.description}
+                onChangeText={(text) =>
+                    setNewProduct({ ...newProduct, description: text })
+                }
+                style={textStyles.body}
+                containerStyle={containerStyles.inputContainer}
+                placeholder="Description"
+            />
 
             <View
                 style={{
