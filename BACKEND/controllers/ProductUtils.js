@@ -1,15 +1,12 @@
-import { getClient } from "./GoogleVisionInit";
-
-//get product search client
-const client = getClient();
+const { getClient } = require("./GoogleVisionInit");
 
 //Project Details
 const projectId = process.env.GOOGLE_PROJECT_ID;
 const location = process.env.GOOGLE_PROJECT_LOCATION;
-const locationPath = client.locationPath(projectId, location);
+const locationPath = getClient().locationPath(projectId, location);
 
 //constants
-export const CATEGORY = {
+const CATEGORY = {
     HOME: "homegoods-v2",
     FASHION: "apparel-v2",
     TOYS: "toys-v2",
@@ -18,7 +15,7 @@ export const CATEGORY = {
 };
 
 //method to create a new product set
-export const createProductSet = async (productSetId, productSetDisplayName) => {
+const createProductSet = async (productSetId, productSetDisplayName) => {
     const productSet = {
         displayName: productSetDisplayName,
     };
@@ -29,12 +26,12 @@ export const createProductSet = async (productSetId, productSetDisplayName) => {
         productSetId: productSetId,
     };
 
-    const [createdProductSet] = await client.createProductSet(request);
+    const [createdProductSet] = await getClient().createProductSet(request);
     return createdProductSet;
 };
 
 //method to create a new product
-export const createProduct = async (
+const createProduct = async (
     productId,
     productDisplayName,
     productCategory,
@@ -69,26 +66,26 @@ export const createProduct = async (
         productId: productId,
     };
 
-    const [createdProduct] = await client.createProduct(request);
+    const [createdProduct] = await getClient().createProduct(request);
     return createdProduct;
 };
 
 //method to add product to product set
-export const addProductToProductSet = async (productId, productSetId) => {
+const addProductToProductSet = async (productId, productSetId) => {
     const request = {
-        name: client.productSetPath(projectId, location, productSetId),
-        product: client.productPath(projectId, location, productId),
+        name: getClient().productSetPath(projectId, location, productSetId),
+        product: getClient().productPath(projectId, location, productId),
     };
 
-    const [response] = await client.addProductToProductSet(request);
+    const [response] = await getClient().addProductToProductSet(request);
     return response;
 };
 
 //methods to update product
 //update product name
-export const updateProductName = async (productId, productDisplayName) => {
+const updateProductName = async (productId, productDisplayName) => {
     const product = {
-        name: client.productPath(projectId, location, productId),
+        name: getClient().productPath(projectId, location, productId),
         displayName: productDisplayName,
     };
 
@@ -99,14 +96,14 @@ export const updateProductName = async (productId, productDisplayName) => {
         },
     };
 
-    const [updatedProduct] = await client.updateProduct(request);
+    const [updatedProduct] = await getClient().updateProduct(request);
     return updatedProduct;
 };
 
 //update product category
-export const updateProductCategory = async (productId, productCategory) => {
+const updateProductCategory = async (productId, productCategory) => {
     const product = {
-        name: client.productPath(projectId, location, productId),
+        name: getClient().productPath(projectId, location, productId),
         productCategory: productCategory,
     };
 
@@ -117,14 +114,14 @@ export const updateProductCategory = async (productId, productCategory) => {
         },
     };
 
-    const [updatedProduct] = await client.updateProduct(request);
+    const [updatedProduct] = await getClient().updateProduct(request);
     return updatedProduct;
 };
 
 //update product description
-export const updateProductDescription = async (productId, productDescription) => {
+const updateProductDescription = async (productId, productDescription) => {
     const product = {
-        name: client.productPath(projectId, location, productId),
+        name: getClient().productPath(projectId, location, productId),
         description: productDescription,
     };
 
@@ -135,14 +132,14 @@ export const updateProductDescription = async (productId, productDescription) =>
         },
     };
 
-    const [updatedProduct] = await client.updateProduct(request);
+    const [updatedProduct] = await getClient().updateProduct(request);
     return updatedProduct;
 }; 
 
 //update product labels
-export const updateProductLabels = async (productId, productColor, productSize, productPrice) => {
+const updateProductLabels = async (productId, productColor, productSize, productPrice) => {
     const product = {
-        name: client.productPath(projectId, location, productId),
+        name: getClient().productPath(projectId, location, productId),
         productLabels: [
             {
                 key: "color",
@@ -166,101 +163,133 @@ export const updateProductLabels = async (productId, productColor, productSize, 
         },
     };
 
-    const [updatedProduct] = await client.updateProduct(request);
+    const [updatedProduct] = await getClient().updateProduct(request);
     return updatedProduct;
 };
 
 //method to delete product
-export const deleteProduct = async (productId) => {
+const deleteProduct = async (productId) => {
     const request = {
-        name: client.productPath(projectId, location, productId),
+        name: getClient().productPath(projectId, location, productId),
     };
 
-    await client.deleteProduct(request);
+    await getClient().deleteProduct(request);
     return("Product deleted successfully");
 };
 
 //method to delete product set
-export const deleteProductSet = async (productSetId) => {
+const deleteProductSet = async (productSetId) => {
     const request = {
-        name: client.productSetPath(projectId, location, productSetId),
+        name: getClient().productSetPath(projectId, location, productSetId),
     };
 
-    await client.deleteProductSet(request);
+    await getClient().deleteProductSet(request);
     return("Product set deleted successfully");
 };
 
 //method to delete product from product set
-export const deleteProductFromProductSet = async (productId, productSetId) => {
+const deleteProductFromProductSet = async (productId, productSetId) => {
     const request = {
-        name: client.productSetPath(projectId, location, productSetId),
-        product: client.productPath(projectId, location, productId),
+        name: getClient().productSetPath(projectId, location, productSetId),
+        product: getClient().productPath(projectId, location, productId),
     };
 
-    await client.removeProductFromProductSet(request);
+    await getClient().removeProductFromProductSet(request);
     return("Product removed from product set successfully");
 };
 
 //method to list all product sets
-export const listProductSets = async () => {
+const listProductSets = async () => {
     const request = {
         parent: locationPath,
     };
 
-    const [response] = await client.listProductSets(request);
+    const [response] = await getClient().listProductSets(request);
     return response;
 };
 
 //method to list all products
-export const listProducts = async () => {
+const listProducts = async () => {
     const request = {
         parent: locationPath,
     };
 
-    const [response] = await client.listProducts(request);
+    const [response] = await getClient().listProducts(request);
     return response;
 };
 
 //method to list all products in a product set
-export const listProductsInProductSet = async (productSetId) => {
+const listProductsInProductSet = async (productSetId) => {
     const request = {
-        name: client.productSetPath(projectId, location, productSetId),
+        name: getClient().productSetPath(projectId, location, productSetId),
     };
 
-    const [response] = await client.listProductsInProductSet(request);
+    const [response] = await getClient().listProductsInProductSet(request);
     return response;
 };
 
 //method to list all reference images of a product
-export const listReferenceImages = async (productId) => {
+const listReferenceImages = async (productId) => {
     const request = {
-        parent: client.productPath(projectId, location, productId),
+        parent: getClient().productPath(projectId, location, productId),
     };
 
-    const [response] = await client.listReferenceImages(request);
+    const [response] = await getClient().listReferenceImages(request);
     return response;
 };
 
 //method to get a single product
-export const getProduct = async (productId) => {
+const getProduct = async (productId) => {
     const request = {
-        name: client.productPath(projectId, location, productId),
+        name: getClient().productPath(projectId, location, productId),
     };
 
-    const [response] = await client.getProduct(request);
+    const [response] = await getClient().getProduct(request);
     return response;
 };
 
 //method to add a product image
-export const addProductImage = async (productId, imageUri, imageId) => {
+const addProductImage = async (productId, imageUri, imageId) => {
     const request = {
-        parent: client.productPath(projectId, location, productId),
+        parent: getClient().productPath(projectId, location, productId),
         referenceImage: {
             uri: imageUri,
         },
         referenceImageId: imageId,
     };
 
-    const [response] = await client.createReferenceImage(request);
+    const [response] = await getClient().createReferenceImage(request);
     return response;
+};
+
+//method to delete a product image
+const deleteProductImage = async (productId, referenceImageId) => {
+    const request = {
+        parent: getClient().productPath(projectId, location, productId),
+        referenceImageId: referenceImageId,
+    };
+
+    await getClient().deleteReferenceImage(request);
+    return("Product image deleted successfully");
+};
+
+module.exports = {
+    createProductSet,
+    createProduct,
+    addProductToProductSet,
+    updateProductName,
+    updateProductCategory,
+    updateProductDescription,
+    updateProductLabels,
+    deleteProduct,
+    deleteProductSet,
+    deleteProductFromProductSet,
+    listProductSets,
+    listProducts,
+    listProductsInProductSet,
+    listReferenceImages,
+    getProduct,
+    addProductImage,
+    deleteProductImage,
+    CATEGORY,
 };
