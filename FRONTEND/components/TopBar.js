@@ -1,6 +1,7 @@
 import { useTheme } from "@rneui/themed";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { Icon } from "@rneui/base";
+import { StatusBar } from "expo-status-bar";
 
 export const TopBar = ({tab, setTab}) => {
 
@@ -38,7 +39,8 @@ const styles = StyleSheet.create({
     navbarStyle: {
         height: 60,
         width: "100%",
-        marginTop: 40,
+        marginTop: 25,
+        paddingTop: StatusBar.currentHeight,
         alignItems: "center",
         flexDirection: "row",
     },

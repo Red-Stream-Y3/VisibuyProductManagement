@@ -1,7 +1,7 @@
 # VisibuyProductManagement
 A seperate product management app for Visibuy
 
-# COMMANDS LIST
+# FRONTEND COMMANDS LIST
 ## Build app
 npx eas build -p android --profile dev
 
