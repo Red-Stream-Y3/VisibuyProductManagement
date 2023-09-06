@@ -49,6 +49,10 @@ export const textStyles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 5,
     },
+    header2: {
+        fontSize: 16,
+        marginBottom: 2,
+    },
     body: {
         fontSize: 16,
     },

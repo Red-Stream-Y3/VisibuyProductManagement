@@ -17,7 +17,7 @@ const {
     addProductImage,
     deleteProductImage,
 } = require("../controllers/ProductUtils");
-const { uplodaFile } = require("../controllers/StorageUtils");
+const { uploadFile, downloadFile } = require("../controllers/StorageUtils");
 const multermiddleware = require("../middleware/Multer");
 
 const router = require("express").Router();
@@ -48,7 +48,6 @@ router.route("/product").post(multermiddleware.fields([
 
     const product = {...JSON.parse(req.body.product)};
 
-
     //get product details
     const productId = ID_PREFIX + String(product.name).replace(/\s/g, "-").toLowerCase();
     const productDisplayName = product.name;
@@ -72,16 +71,27 @@ router.route("/product").post(multermiddleware.fields([
     //upload images to cloud storage
     const images = req.files.images;
 
-    images.forEach(async (file) => {
-        await uplodaFile(file).then(async (response) => {
+    for (let i = 0; i < images.length; i++) {
+        const file = images[i];
+        await uploadFile(file).then(async (uri) => {
+            console.log(uri)
             //link image to product
-            await addProductImage(productId, response, file.originalname);
+            await addProductImage(productId, uri, "IMG-"+file.originalname);
+            console.log("image "+file.originalname+" linked to product "+productId);
         }).catch((err) => {
-            res.json(err);
+            console.log(err);
         });
-    });
+    };
 
     res.json({message: "Product created successfully"});
+});
+
+router.route("/storage").get((req, res) => {
+    downloadFile("gs://visibuy_product_images/test-product-image-1.jpeg")
+    .then((data) => {
+        console.log("Gottem");
+        res.json("gottem");
+    })
 });
 
 //add product to product set
@@ -101,7 +111,15 @@ router.route("/product/description").put((req, res) => {});
 router.route("/product/labels").put((req, res) => {});
 
 //delete product
-router.route("/product").delete((req, res) => {});
+router.route("/product/:productName").delete(async (req, res) => {
+    //call deleteProduct method
+    const productId =
+        ID_PREFIX +
+        String(req.params.productName).replace(/\s/g, "-").toLowerCase();
+
+    const result = await deleteProduct(productId);
+    res.json({ message: result });
+});
 
 //delete product set
 router.route("/productset").delete((req, res) => {});
@@ -116,7 +134,6 @@ router.route("/productset").get((req, res) => {});
 router.route("/product").get((req, res) => {
     listProducts()
         .then((response) => {
-            console.log(response);
             res.json(response);
         })
         .catch((err) => {

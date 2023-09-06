@@ -28,7 +28,7 @@ export const ViewProducts = ({selectedIndex}) => {
     return (
         <View style={{width: '100%', alignItems: 'center', flex: 1}}>
             {selectedIndex === 0 && <CatalogueList />}
-            {selectedIndex === 1 && <ProductList products={productList} />}
+            {selectedIndex === 1 && <ProductList products={productList} getProducts={getProducts} showToast={showToast} />}
         </View>
     );
 };
