@@ -6,9 +6,10 @@ const findConfig = require("find-config");
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
-    dotenv.config({ path: findConfig('.env.dev') });
-  }
+  dotenv.config({ path: findConfig('.env.dev') });
+}
 
+//middleware
 app.use(cors());
 app.use(express.json());
 

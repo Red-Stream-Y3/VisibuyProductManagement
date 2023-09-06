@@ -16,3 +16,7 @@ npx expo start --dev-client
 
 ## Clear cache and start local server
 npx expo start --dev-client --reset-cache
+
+# BACKEND COMMANDS LIST
+## Start local server
+npm start

@@ -3,15 +3,11 @@ import { Text, View, ToastAndroid } from "react-native";
 import { containerStyles, textStyles } from "../Styles";
 import { Button, ButtonGroup, Card, Divider, Icon } from "@rneui/themed";
 import { useTheme } from "@rneui/themed";
+import { ViewProducts } from "./ViewProducts";
 
 //react native MainMenu component
 export const MainMenu = (props) => {
-    const [inputValue, setInputValue] = useState("Hello World!");
     const { theme } = useTheme();
-
-    const showToast = () => {
-        ToastAndroid.show(inputValue, ToastAndroid.SHORT);
-    };
 
     return (
         <View
@@ -53,9 +49,16 @@ export const MainMenu = (props) => {
             </View>
 
             <View style={{ flex: 1, width: "100%", alignItems: "center" }}>
-                <Card containerStyle={containerStyles.mainMenuCard}>
-                    
-                </Card>
+                <View style={{
+                    ...containerStyles.mainMenuCard, 
+                    borderRadius: 5,
+                    borderStyle: 'solid',
+                    borderWidth: 1,
+                    borderColor: theme.colors.grey5,
+                    alignItems: 'center',   
+                    }}>
+                    <ViewProducts selectedIndex={props.selectedIndex} />
+                </View>
             </View>
         </View>
     );

@@ -47,13 +47,14 @@ export default function App() {
 
     const resetNewProduct = () => {
         setNewProduct({
-            name: "",
+            name: "Cream Cracker",
             category: "",
-            size: "",
-            price: "",
-            color: "",
-            description: "",
+            size: "Large",
+            price: "300.00",
+            color: "Red",
+            description: "Low sugar crackers",
             images: new Array(),
+            types: new Array(),
         });
     };
 
