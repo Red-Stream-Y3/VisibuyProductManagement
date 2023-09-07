@@ -3,10 +3,10 @@
     "version": ">= 5.1.0"
   },
   "build": {
-    "dev": {
+    "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "dev"
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",

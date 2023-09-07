@@ -15,7 +15,7 @@ export const CATEGORY = {
     GENERAL: "general-v1",
 };
 
-export const SERVER_ADDRESS = "http://10.0.2.2:4444";
+export const SERVER_ADDRESS = "https://visibuy-vision-ukkxew3r5q-uc.a.run.app"; //"http://10.0.2.2:4444";
 
 export const NewProduct = () => {
     const { theme } = useTheme();
@@ -45,19 +45,25 @@ export const NewProduct = () => {
                 showToast("Cancelled");
             } else {
                 //setImage(result.assets[0].uri);
-                setNewProduct({
-                    ...newProduct,
-                    images: [
-                        ...newProduct.images,
-                        ...result.assets.map((asset) => asset.uri),
-                    ],
-                    types: [
-                        ...newProduct.types,
-                        ...result.assets.map((asset) =>
-                            asset.uri.substring(asset.uri.lastIndexOf(".") + 1)
-                        ), //extract the data types of the images
-                    ],
-                });
+                if (newProduct.images.length <= 10) {
+                    setNewProduct({
+                        ...newProduct,
+                        images: [
+                            ...newProduct.images,
+                            ...result.assets.map((asset) => asset.uri),
+                        ],
+                        types: [
+                            ...newProduct.types,
+                            ...result.assets.map((asset) =>
+                                asset.uri.substring(
+                                    asset.uri.lastIndexOf(".") + 1
+                                )
+                            ), //extract the data types of the images
+                        ],
+                    });
+                } else {
+                    showToast("You can only select 10 images");
+                }
             }
         } catch (error) {
             showToast(error.message);

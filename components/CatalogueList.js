@@ -1,4 +1,4 @@
-import { Button, Icon, useTheme } from "@rneui/themed";
+import { Button, Icon, Overlay, useTheme } from "@rneui/themed";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { useAppContext } from "../context/Context";
 import { useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import { textStyles } from "../Styles";
 import { SERVER_ADDRESS } from "./NewProduct";
 import { getProductID } from "../utils/ProductUtils";
 import axios from "axios";
+import { CatalogueProductList } from "./CatalogueProductList";
 
 export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
     const { theme } = useTheme();
@@ -29,6 +30,12 @@ export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
 
     return (
         <View style={{ width: "100%", flex: 1 }}>
+            <Overlay
+                isVisible={show}
+                onBackdropPress={() => setShow(false)}
+                overlayStyle={{ width: "90%", borderRadius: 5 }}>
+                <CatalogueProductList productSet={selected} />
+            </Overlay>
             <ScrollView style={{ width: "100%" }}>
                 {productSets?.map((productSet, i) => {
                     return (
@@ -60,7 +67,8 @@ export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
                                             {productSet.displayName}
                                         </Text>
                                         <Text>
-                                            Products : {productSet.products?.length || 0}
+                                            Products :{" "}
+                                            {productSet.products?.length || 0}
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: "row" }}>
@@ -79,9 +87,7 @@ export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
                                         </Button>
                                         <Button
                                             onPress={() =>
-                                                onDelete(
-                                                    productSet.displayName
-                                                )
+                                                onDelete(productSet.displayName)
                                             }
                                             containerStyle={{
                                                 margin: 5,

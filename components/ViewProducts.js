@@ -34,6 +34,7 @@ export const ViewProducts = () => {
                 setProductSets(response.data);
             }).catch((err) => {
                 showToast(err.message);
+                console.debug(err);
             });
     };
 
