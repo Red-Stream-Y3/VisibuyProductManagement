@@ -2,10 +2,12 @@ import { useTheme } from "@rneui/themed";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { Icon } from "@rneui/base";
 import { StatusBar } from "expo-status-bar";
+import { useAppContext } from "../context/Context";
 
-export const TopBar = ({tab, setTab}) => {
+export const TopBar = () => {
 
     const { theme } = useTheme();
+    const { setTab } = useAppContext();
 
     return (
         <View style={styles.navbarStyle}>

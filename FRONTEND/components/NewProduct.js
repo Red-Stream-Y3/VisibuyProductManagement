@@ -5,6 +5,7 @@ import { containerStyles, textStyles } from "../Styles";
 import * as ImagePicker from "expo-image-picker";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
+import { useAppContext } from "../context/Context";
 
 export const CATEGORY = {
     HOME: "homegoods-v2",
@@ -16,15 +17,12 @@ export const CATEGORY = {
 
 export const SERVER_ADDRESS = "http://10.0.2.2:4444";
 
-export const NewProduct = ({ newProduct, setNewProduct, resetProduct }) => {
+export const NewProduct = () => {
     const { theme } = useTheme();
     const [dropdown, setDropdown] = React.useState("Category");
     const [loading, setLoading] = React.useState(false);
+    const {newProduct, setNewProduct, resetProduct, showToast } = useAppContext();
     //const [image, setImage] = React.useState(null);
-
-    const showToast = (message) => {
-        ToastAndroid.show(message, ToastAndroid.SHORT);
-    };
 
     const [permission, requestCameraPermission] =
         ImagePicker.useCameraPermissions();

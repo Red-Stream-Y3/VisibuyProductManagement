@@ -4,10 +4,12 @@ import { containerStyles, textStyles } from "../Styles";
 import { Button, ButtonGroup, Card, Divider, Icon } from "@rneui/themed";
 import { useTheme } from "@rneui/themed";
 import { ViewProducts } from "./ViewProducts";
+import { useAppContext } from "../context/Context";
 
 //react native MainMenu component
-export const MainMenu = (props) => {
+export const MainMenu = () => {
     const { theme } = useTheme();
+    const { setTab, selectedIndex, setSelectedIndex } = useAppContext();
 
     return (
         <View
@@ -26,7 +28,7 @@ export const MainMenu = (props) => {
                     VISIBUY ADMIN
                 </Text>
                 <Button
-                    onPress={() => props.setTab("new")}
+                    onPress={() => setTab("new")}
                     containerStyle={{ margin: 5, borderRadius: 5 }}
                     titleStyle={{ color: theme.colors.buttonText }}>
                     <Icon
@@ -43,8 +45,8 @@ export const MainMenu = (props) => {
                     containerStyle={{ width: "90%", borderRadius: 5 }}
                     style={{ marginVertical: 10 }}
                     buttons={["CATALOGUES", "PRODUCTS"]}
-                    selectedIndex={props.selectedIndex}
-                    onPress={(i) => props.setSelectedIndex(i)}
+                    selectedIndex={selectedIndex}
+                    onPress={(i) => setSelectedIndex(i)}
                 />
             </View>
 
@@ -57,7 +59,7 @@ export const MainMenu = (props) => {
                     borderColor: theme.colors.grey5,
                     alignItems: 'center',   
                     }}>
-                    <ViewProducts selectedIndex={props.selectedIndex} />
+                    <ViewProducts />
                 </View>
             </View>
         </View>

@@ -74,24 +74,14 @@ router.route("/product").post(multermiddleware.fields([
     for (let i = 0; i < images.length; i++) {
         const file = images[i];
         await uploadFile(file).then(async (uri) => {
-            console.log(uri)
             //link image to product
             await addProductImage(productId, uri, "IMG-"+file.originalname);
-            console.log("image "+file.originalname+" linked to product "+productId);
         }).catch((err) => {
             console.log(err);
         });
     };
 
     res.json({message: "Product created successfully"});
-});
-
-router.route("/storage").get((req, res) => {
-    downloadFile("gs://visibuy_product_images/test-product-image-1.jpeg")
-    .then((data) => {
-        console.log("Gottem");
-        res.json("gottem");
-    })
 });
 
 //add product to product set
@@ -117,7 +107,21 @@ router.route("/product/:productName").delete(async (req, res) => {
         ID_PREFIX +
         String(req.params.productName).replace(/\s/g, "-").toLowerCase();
 
+    //get a list of images of the product
+    const images = await listReferenceImages(productId);
+
     const result = await deleteProduct(productId);
+    console.log("Deleted product : " + productId);
+
+    if (images.length > 0) {
+        //delete all images from cloud storage
+        for (let i = 0; i < images.length; i++) {
+            const image = images[i];
+            await deleteFile(image.uri);
+            console.log("Deleted file : " + image.uri);
+        }
+    }
+
     res.json({ message: result });
 });
 
@@ -128,7 +132,16 @@ router.route("/productset").delete((req, res) => {});
 router.route("/productset/product").delete((req, res) => {});
 
 //get all product sets
-router.route("/productset").get((req, res) => {});
+router.route("/productset").get(async (req, res) => {
+    //call listProductSets method
+    await listProductSets()
+        .then((response) => {
+            res.json(response);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
+});
 
 //get all products
 router.route("/product").get((req, res) => {
@@ -145,7 +158,18 @@ router.route("/product").get((req, res) => {
 router.route("/productset/product").get((req, res) => {});
 
 //get all reference images of a product
-router.route("/product/referenceimage").get((req, res) => {});
+router.route("/product/:productID/referenceimage").get((req, res) => {
+    //call listReferenceImages method
+    const productId = req.params.productID;
+
+    listReferenceImages(productId)
+        .then((response) => {
+            res.json(response);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
+});
 
 //get a single product
 router.route("/singleproduct").get((req, res) => {});
