@@ -17,7 +17,7 @@ const {
     addProductImage,
     deleteProductImage,
 } = require("../controllers/ProductUtils");
-const { uploadFile, downloadFile } = require("../controllers/StorageUtils");
+const { uploadFile, downloadFile, deleteFile } = require("../controllers/StorageUtils");
 const multermiddleware = require("../middleware/Multer");
 
 const router = require("express").Router();
@@ -28,7 +28,11 @@ const ID_PREFIX = "VP-";
 //create new product set
 router.route("/productset").post((req, res) => {
     //call createProductSet method
-    const productSetId = ID_PREFIX + req.body.productSetId;
+    const productSetId =
+        ID_PREFIX +
+        String(req.body.productSetDisplayName)
+            .replace(/\s/g, "-")
+            .toLowerCase();
     const productSetDisplayName = req.body.productSetDisplayName;
 
     createProductSet(productSetId, productSetDisplayName)
@@ -103,9 +107,7 @@ router.route("/product/labels").put((req, res) => {});
 //delete product
 router.route("/product/:productName").delete(async (req, res) => {
     //call deleteProduct method
-    const productId =
-        ID_PREFIX +
-        String(req.params.productName).replace(/\s/g, "-").toLowerCase();
+    const productId = req.params.productName;
 
     //get a list of images of the product
     const images = await listReferenceImages(productId);
@@ -116,9 +118,12 @@ router.route("/product/:productName").delete(async (req, res) => {
     if (images.length > 0) {
         //delete all images from cloud storage
         for (let i = 0; i < images.length; i++) {
-            const image = images[i];
-            await deleteFile(image.uri);
-            console.log("Deleted file : " + image.uri);
+            const fileName = String(images[i].uri).split("/")[3];
+            await deleteFile(fileName).then(() => {
+                console.log("Deleted file : " + fileName);
+            }).catch((err) => {
+                console.log(err);
+            });
         }
     }
 
@@ -126,7 +131,18 @@ router.route("/product/:productName").delete(async (req, res) => {
 });
 
 //delete product set
-router.route("/productset").delete((req, res) => {});
+router.route("/productset/:productSetDisplayName").delete((req, res) => {
+    //call deleteProductSet method
+    const productSetId = req.params.productSetDisplayName;
+
+    deleteProductSet(productSetId)
+        .then((response) => {
+            res.json({message: response});
+        })
+        .catch((err) => {
+            res.json(err);
+        });
+});
 
 //delete product from product set
 router.route("/productset/product").delete((req, res) => {});

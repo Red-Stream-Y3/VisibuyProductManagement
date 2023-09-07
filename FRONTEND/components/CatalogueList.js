@@ -1,63 +1,108 @@
 import { Button, Icon, useTheme } from "@rneui/themed";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Pressable } from "react-native";
 import { useAppContext } from "../context/Context";
+import { useEffect, useState } from "react";
+import { textStyles } from "../Styles";
+import { SERVER_ADDRESS } from "./NewProduct";
+import { getProductID } from "../utils/ProductUtils";
+import axios from "axios";
 
 export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
     const { theme } = useTheme();
-    const { setTab } = useAppContext();
+    const [selected, setSelected] = useState(null);
+    const [show, setShow] = useState(false);
+    const { setTab, showToast } = useAppContext();
+
+    const onDelete = async (productSetName) => {
+        setLoading(true);
+
+        await axios.delete(`${SERVER_ADDRESS}/api/productset/${getProductID(productSetName)}`)
+        .then((response) => {
+            showToast(response.data.message);
+            getProductSets();
+        }).catch((err) => {
+            showToast(err.message);
+        });
+
+        setLoading(false);
+    };
 
     return (
         <View style={{ width: "100%", flex: 1 }}>
             <ScrollView style={{ width: "100%" }}>
-                {
-                    (productSets !== null &&
-                    productSets !== undefined) &&
-                    productSets.map((productSet, i) => {
-                        return (
+                {productSets?.map((productSet, i) => {
+                    return (
+                        <View
+                            key={i}
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                overflow: "hidden",
+                            }}>
+                            <Pressable
+                                onPress={() => {
+                                    setSelected(productSet);
+                                    setShow(true);
+                                }}
+                                android_ripple={{
+                                    color: theme.colors.grey5,
+                                    borderless: false,
+                                    radius: 200,
+                                }}
+                                style={{ width: "100%", padding: 10 }}>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                    }}>
+                                    <View>
+                                        <Text style={textStyles.header2}>
+                                            {productSet.displayName}
+                                        </Text>
+                                        <Text>
+                                            Products : {productSet.products?.length || 0}
+                                        </Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Button
+                                            onPress={() =>
+                                                showToast(
+                                                    "Edit : not implemented yet"
+                                                )
+                                            }
+                                            containerStyle={{
+                                                margin: 5,
+                                                borderRadius: 50,
+                                            }}
+                                            type="clear">
+                                            <Icon name="edit" />
+                                        </Button>
+                                        <Button
+                                            onPress={() =>
+                                                onDelete(
+                                                    productSet.displayName
+                                                )
+                                            }
+                                            containerStyle={{
+                                                margin: 5,
+                                                borderRadius: 50,
+                                            }}
+                                            type="clear">
+                                            <Icon name="delete" />
+                                        </Button>
+                                    </View>
+                                </View>
+                            </Pressable>
                             <View
-                                key={i}
                                 style={{
                                     width: "100%",
-                                    height: "auto",
-                                    overflow: "hidden",
-                                }}>
-                                <Text style={{
-                                    fontSize: 18,
-                                    fontWeight: "bold",
-                                    color: theme.colors.primary,
-                                    margin: 10,
-                                    }}>
-                                    {productSet.displayName}
-                                </Text>
-                                <Text style={{
-                                    fontSize: 14,
-                                    fontWeight: "bold",
-                                    color: theme.colors.primary,
-                                    margin: 10,
-                                    }}>
-                                    {productSet.description}
-                                </Text>
-                                <View style={{
-                                    borderWidth: 1,
                                     height: 1,
-                                    width: "100%",
-                                    borderColor: theme.colors.grey5,
-                                    marginBottom: 5,
-                                    }} />
-                                <View style={{ alignItems: "center" }}>
-                                    <Text style={{ fontWeight: "bold" }}>Products</Text>
-                                    {
-                                        productSet.products.map((product, i) => {
-                                            return (
-                                                <Text key={i}>{product.displayName}</Text>
-                                            );
-                                        })
-                                    }
-                                </View>
-                            </View>
-                        );
-                    })
-                }
+                                    backgroundColor: theme.colors.grey5,
+                                }}
+                            />
+                        </View>
+                    );
+                })}
                 <Button
                     onPress={() => setTab("newset")}
                     containerStyle={{ margin: 5, borderRadius: 5 }}

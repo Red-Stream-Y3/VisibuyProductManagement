@@ -9,7 +9,7 @@ import { useAppContext } from "../context/Context";
 //react native MainMenu component
 export const MainMenu = () => {
     const { theme } = useTheme();
-    const { setTab, selectedIndex, setSelectedIndex } = useAppContext();
+    const { showToast, selectedIndex, setSelectedIndex } = useAppContext();
 
     return (
         <View
@@ -28,15 +28,15 @@ export const MainMenu = () => {
                     VISIBUY ADMIN
                 </Text>
                 <Button
-                    onPress={() => setTab("new")}
+                    onPress={() => showToast("Not yet implemented")}
                     containerStyle={{ margin: 5, borderRadius: 5 }}
                     titleStyle={{ color: theme.colors.buttonText }}>
                     <Icon
-                        name="add-circle"
+                        name="camera"
                         size={25}
                         color={theme.colors.buttonIcon}
                     />
-                    Add Product
+                    Test Image
                 </Button>
             </View>
 

@@ -21,7 +21,7 @@ export const NewProduct = () => {
     const { theme } = useTheme();
     const [dropdown, setDropdown] = React.useState("Category");
     const [loading, setLoading] = React.useState(false);
-    const {newProduct, setNewProduct, resetProduct, showToast } = useAppContext();
+    const {newProduct, setNewProduct, resetNewProduct, showToast } = useAppContext();
     //const [image, setImage] = React.useState(null);
 
     const [permission, requestCameraPermission] =
@@ -153,7 +153,7 @@ export const NewProduct = () => {
                 })
                 .then((response) => {
                     showToast(response.data.message);
-                    resetProduct();
+                    resetNewProduct();
                 })
                 .catch((err) => {
                     showToast(err.message);

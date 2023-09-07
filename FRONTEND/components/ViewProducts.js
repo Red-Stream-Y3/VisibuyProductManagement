@@ -37,12 +37,17 @@ export const ViewProducts = () => {
             });
     };
 
-    useEffect(() => {
-        getProducts();
-    }, []);
+    const initialize = async () => {
+        setLoading(true);
+        
+        await getProductSets();
+        await getProducts();
+
+        setLoading(false);
+    };
 
     useEffect(() => {
-        getProductSets();
+        initialize();
     }, []);
 
     return (

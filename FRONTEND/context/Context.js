@@ -16,9 +16,9 @@ export const AppProvider = ({ children }) => {
         setNewProduct({
             name: "Test Product",
             category: "homegoods-v2",
-            size: "Large",
+            size: "large",
             price: "300.00",
-            color: "Red",
+            color: "red",
             description: "Lorem Ipsum",
             images: new Array(),
             types: new Array(),

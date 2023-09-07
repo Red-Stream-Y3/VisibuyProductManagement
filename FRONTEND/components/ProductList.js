@@ -1,12 +1,12 @@
-import { Button, Icon, ListItem, Overlay, useTheme } from "@rneui/themed";
+import { Button, Icon, Overlay, useTheme } from "@rneui/themed";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { containerStyles, textStyles } from "../Styles";
-import { color } from "@rneui/base";
+import { textStyles } from "../Styles";
 import axios from "axios";
 import { SERVER_ADDRESS } from "./NewProduct";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "./ProductCard";
 import { useAppContext } from "../context/Context";
+import { getProductID } from "../utils/ProductUtils";
 
 export const ProductList = ({ products, getProducts, setLoading }) => {
     const [show, setShow] = useState(false);
@@ -14,10 +14,12 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
     const { theme } = useTheme();
     const { showToast, setTab } = useAppContext();
 
+    // useEffect(() => {console.debug(products)}, [products]);
+
     const onDelete = async (productName) => {
         setLoading(true);
 
-        await axios.delete(`${SERVER_ADDRESS}/api/product/${productName}`,)
+        await axios.delete(`${SERVER_ADDRESS}/api/product/${getProductID(productName)}`,)
         .then((response) => {
             showToast(response.data.message);
             getProducts();
@@ -39,8 +41,7 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
             </Overlay>
 
             <ScrollView style={{ width: "100%" }}>
-                {(products !== null || products !== undefined) &&
-                    products.map((product, i) => {
+                {products?.map((product, i) => {
                         return (
                             <View
                                 key={i}
@@ -52,7 +53,6 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
                                 <Pressable
                                     onPress={() => {
                                         setSelected(product);
-                                        console.debug(product);
                                         setShow(true);
                                     }}
                                     android_ripple={{
