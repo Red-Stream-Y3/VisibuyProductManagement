@@ -57,6 +57,7 @@ export const ViewProducts = () => {
             </Overlay>
             {selectedIndex === 0 && (
                 <CatalogueList
+                    productList={productList}
                     productSets={productSets}
                     getProductSets={getProductSets}
                     setLoading={setLoading}

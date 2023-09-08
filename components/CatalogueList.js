@@ -6,8 +6,9 @@ import { textStyles } from "../Styles";
 import { getProductID } from "../utils/ProductUtils";
 import axios from "axios";
 import { CatalogueProductList } from "./CatalogueProductList";
+import { getDateTime } from "../utils/ProductUtils";
 
-export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
+export const CatalogueList = ({ productList, productSets, getProductSets, setLoading }) => {
     const { theme } = useTheme();
     const [selected, setSelected] = useState(null);
     const [show, setShow] = useState(false);
@@ -33,7 +34,7 @@ export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
                 isVisible={show}
                 onBackdropPress={() => setShow(false)}
                 overlayStyle={{ width: "90%", borderRadius: 5 }}>
-                <CatalogueProductList productSet={selected} />
+                <CatalogueProductList productList={productList} productSet={selected} />
             </Overlay>
             <ScrollView style={{ width: "100%" }}>
                 {productSets?.map((productSet, i) => {
@@ -66,8 +67,8 @@ export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
                                             {productSet.displayName}
                                         </Text>
                                         <Text>
-                                            Products :{" "}
-                                            {productSet.products?.length || 0}
+                                            Index Time :{" "}
+                                            {getDateTime(productSet.indexTime?.seconds) || 0}
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: "row" }}>

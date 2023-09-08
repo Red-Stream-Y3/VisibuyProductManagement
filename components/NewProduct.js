@@ -29,8 +29,7 @@ export const NewProduct = () => {
     } = useAppContext();
     //const [image, setImage] = React.useState(null);
 
-    const [permission, requestCameraPermission] =
-        ImagePicker.useCameraPermissions();
+    const [permission, requestCameraPermission] = ImagePicker.useCameraPermissions();
 
     //method to pick image from gallery
     const pickImage = async () => {
@@ -106,6 +105,7 @@ export const NewProduct = () => {
             }
         } catch (error) {
             showToast(error.message);
+            console.debug(error);
         }
     };
 

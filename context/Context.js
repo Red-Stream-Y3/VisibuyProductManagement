@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ToastAndroid } from "react-native";
+// import DeviceInfo from "react-native-device-info";
 
 export const AppContext = React.createContext("appContext");
 
@@ -7,8 +8,13 @@ export const AppProvider = ({ children }) => {
     const [newProduct, setNewProduct] = React.useState({});
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [tab, setTab] = React.useState("main");
+    const [SERVER_ADDRESS, setSERVER_ADDRESS] = React.useState("https://visibuy-vision-ukkxew3r5q-uc.a.run.app");
 
-    const SERVER_ADDRESS = "https://visibuy-vision-ukkxew3r5q-uc.a.run.app"; //"http://10.0.2.2:4444";
+    useEffect(() => {
+        // if(DeviceInfo.isEmulatorSync()){
+            setSERVER_ADDRESS("http://10.0.2.2:4444");
+        // }
+    }, []);
     
     const showToast = (message) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -16,12 +22,12 @@ export const AppProvider = ({ children }) => {
 
     const resetNewProduct = () => {
         setNewProduct({
-            name: "Test Product",
-            category: "homegoods-v2",
-            size: "large",
-            price: "300.00",
-            color: "red",
-            description: "Lorem Ipsum",
+            name: "", //Test Product
+            category: "", //homegoods-v2
+            size: "", //large
+            price: "", //300.00
+            color: "", //red
+            description: "", //Lorem Ipsum
             images: new Array(),
             types: new Array(),
         });
