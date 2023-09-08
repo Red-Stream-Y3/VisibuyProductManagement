@@ -10,6 +10,9 @@ export const AppProvider = ({ children }) => {
     const [tab, setTab] = React.useState("main");
     const [SERVER_ADDRESS, setSERVER_ADDRESS] = React.useState("https://visibuy-vision-ukkxew3r5q-uc.a.run.app");
 
+    const BASE_SEARCH_SET_ID = "VP-supermarket";
+
+    //set server address
     useEffect(() => {
         // if(DeviceInfo.isEmulatorSync()){
             setSERVER_ADDRESS("http://10.0.2.2:4444");
@@ -23,7 +26,7 @@ export const AppProvider = ({ children }) => {
     const resetNewProduct = () => {
         setNewProduct({
             name: "", //Test Product
-            category: "", //homegoods-v2
+            category: "packagedgoods-v1", //homegoods-v2
             size: "", //large
             price: "", //300.00
             color: "", //red
@@ -50,6 +53,7 @@ export const AppProvider = ({ children }) => {
                 tab,
                 setTab,
                 SERVER_ADDRESS,
+                BASE_SEARCH_SET_ID,
             }}>
             {children}
         </AppContext.Provider>

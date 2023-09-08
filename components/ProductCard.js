@@ -5,10 +5,10 @@ import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { getProductID } from "../utils/ProductUtils";
 import { useAppContext } from "../context/Context";
 
-export const ProductCard = ({ product, showToast }) => {
+export const ProductCard = ({ product }) => {
     const [images, setImages] = React.useState(null); // [image, index]
     const { theme } = useTheme();
-    const { SERVER_ADDRESS } = useAppContext();
+    const { SERVER_ADDRESS, showToast } = useAppContext();
 
     const getImages = async () => {
         await axios

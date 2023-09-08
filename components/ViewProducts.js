@@ -1,9 +1,9 @@
-import { View, ToastAndroid, ActivityIndicator } from "react-native";
+import { View, ToastAndroid } from "react-native";
 import { ProductList } from "./ProductList";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CatalogueList } from "./CatalogueList";
-import { Overlay, useTheme } from "@rneui/themed";
+import { LinearProgress, useTheme } from "@rneui/themed";
 import { useAppContext } from "../context/Context";
 
 export const ViewProducts = () => {
@@ -52,9 +52,9 @@ export const ViewProducts = () => {
 
     return (
         <View style={{ width: "100%", alignItems: "center", flex: 1 }}>
-            <Overlay isVisible={loading} overlayStyle={{ borderRadius: 50 }}>
-                <ActivityIndicator size="large" color={theme.colors.primary} />
-            </Overlay>
+            {loading && (
+                <LinearProgress style={{ position: "absolute", top: 0 }} />
+            )}
             {selectedIndex === 0 && (
                 <CatalogueList
                     productList={productList}

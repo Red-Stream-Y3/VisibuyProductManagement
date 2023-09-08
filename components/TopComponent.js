@@ -7,6 +7,7 @@ import { NewProductSet } from "./NewProductSet";
 import { MainMenu } from "./MainMenu";
 import { TopBar } from './TopBar';
 import { containerStyles } from "../Styles";
+import { TestImage } from "./TestImage";
 
 export const TopComponent = () => {
     const { tab } = useAppContext();
@@ -84,6 +85,7 @@ export const TopComponent = () => {
                 {tab === "main" && <MainMenu />}
                 {tab === "new" && <NewProduct />}
                 {tab === "newset" && <NewProductSet />}
+                {tab === "test" && <TestImage />}
             </View>
             {/* <NavigationContainer>
                     <Stack.Navigator initialRouteName="MainMenu">

@@ -36,7 +36,7 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
                 isVisible={show}
                 onBackdropPress={() => setShow(false)}
                 overlayStyle={{ width: "90%", borderRadius: 5 }}>
-                <ProductCard product={selected} showToast={showToast} />
+                <ProductCard product={selected} />
             </Overlay>
 
             <ScrollView style={{ width: "100%" }}>
