@@ -2,13 +2,13 @@ import { Card, useTheme } from "@rneui/themed";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
-import { SERVER_ADDRESS } from "./NewProduct";
 import { getProductID } from "../utils/ProductUtils";
-import { textStyles } from "../Styles";
+import { useAppContext } from "../context/Context";
 
 export const ProductCard = ({ product, showToast }) => {
     const [images, setImages] = React.useState(null); // [image, index]
     const { theme } = useTheme();
+    const { SERVER_ADDRESS } = useAppContext();
 
     const getImages = async () => {
         await axios

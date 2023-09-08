@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Button, Card, Icon, Input, useTheme } from "@rneui/themed";
-import { View, Text, ToastAndroid, ScrollView, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { containerStyles, textStyles } from "../Styles";
 import * as ImagePicker from "expo-image-picker";
 import { Dropdown } from "react-native-element-dropdown";
@@ -15,13 +15,18 @@ export const CATEGORY = {
     GENERAL: "general-v1",
 };
 
-export const SERVER_ADDRESS = "https://visibuy-vision-ukkxew3r5q-uc.a.run.app"; //"http://10.0.2.2:4444";
 
 export const NewProduct = () => {
     const { theme } = useTheme();
     const [dropdown, setDropdown] = React.useState("Category");
     const [loading, setLoading] = React.useState(false);
-    const {newProduct, setNewProduct, resetNewProduct, showToast } = useAppContext();
+    const {
+        newProduct,
+        setNewProduct,
+        resetNewProduct,
+        showToast,
+        SERVER_ADDRESS,
+    } = useAppContext();
     //const [image, setImage] = React.useState(null);
 
     const [permission, requestCameraPermission] =

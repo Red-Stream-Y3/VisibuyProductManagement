@@ -2,8 +2,7 @@ import { Button, Icon, Overlay, useTheme } from "@rneui/themed";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { textStyles } from "../Styles";
 import axios from "axios";
-import { SERVER_ADDRESS } from "./NewProduct";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ProductCard } from "./ProductCard";
 import { useAppContext } from "../context/Context";
 import { getProductID } from "../utils/ProductUtils";
@@ -12,7 +11,7 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
     const [show, setShow] = useState(false);
     const [selected, setSelected] = useState(null); // [product, index]
     const { theme } = useTheme();
-    const { showToast, setTab } = useAppContext();
+    const { showToast, setTab, SERVER_ADDRESS } = useAppContext();
 
     // useEffect(() => {console.debug(products)}, [products]);
 

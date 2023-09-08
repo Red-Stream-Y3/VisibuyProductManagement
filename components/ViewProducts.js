@@ -1,8 +1,7 @@
-import { View, ToastAndroid, Text, ActivityIndicator } from "react-native";
+import { View, ToastAndroid, ActivityIndicator } from "react-native";
 import { ProductList } from "./ProductList";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { SERVER_ADDRESS } from "./NewProduct";
 import { CatalogueList } from "./CatalogueList";
 import { Overlay, useTheme } from "@rneui/themed";
 import { useAppContext } from "../context/Context";
@@ -11,7 +10,7 @@ export const ViewProducts = () => {
     const [productList, setProductList] = useState([]);
     const [productSets, setProductSets] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { selectedIndex } = useAppContext();
+    const { selectedIndex, SERVER_ADDRESS } = useAppContext();
 
     const { theme } = useTheme();
 

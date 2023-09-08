@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Text, View, ToastAndroid } from "react-native";
+import React from "react";
+import { Text, View } from "react-native";
 import { containerStyles, textStyles } from "../Styles";
 import { Button, ButtonGroup, Card, Divider, Icon } from "@rneui/themed";
 import { useTheme } from "@rneui/themed";

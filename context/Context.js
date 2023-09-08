@@ -7,6 +7,8 @@ export const AppProvider = ({ children }) => {
     const [newProduct, setNewProduct] = React.useState({});
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [tab, setTab] = React.useState("main");
+
+    const SERVER_ADDRESS = "https://visibuy-vision-ukkxew3r5q-uc.a.run.app"; //"http://10.0.2.2:4444";
     
     const showToast = (message) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -41,6 +43,7 @@ export const AppProvider = ({ children }) => {
                 resetNewProduct,
                 tab,
                 setTab,
+                SERVER_ADDRESS,
             }}>
             {children}
         </AppContext.Provider>

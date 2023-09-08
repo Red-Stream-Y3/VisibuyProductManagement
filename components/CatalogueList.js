@@ -1,9 +1,8 @@
 import { Button, Icon, Overlay, useTheme } from "@rneui/themed";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { useAppContext } from "../context/Context";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { textStyles } from "../Styles";
-import { SERVER_ADDRESS } from "./NewProduct";
 import { getProductID } from "../utils/ProductUtils";
 import axios from "axios";
 import { CatalogueProductList } from "./CatalogueProductList";
@@ -12,7 +11,7 @@ export const CatalogueList = ({ productSets, getProductSets, setLoading }) => {
     const { theme } = useTheme();
     const [selected, setSelected] = useState(null);
     const [show, setShow] = useState(false);
-    const { setTab, showToast } = useAppContext();
+    const { setTab, showToast, SERVER_ADDRESS } = useAppContext();
 
     const onDelete = async (productSetName) => {
         setLoading(true);

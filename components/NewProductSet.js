@@ -1,15 +1,14 @@
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { containerStyles, textStyles } from "../Styles";
 import { useState } from "react";
 import { Button, Input, useTheme } from "@rneui/themed";
 import { useAppContext } from "../context/Context";
 import axios from "axios";
-import { SERVER_ADDRESS } from "./NewProduct";
 
 export const NewProductSet = () => {
     const [productSet, setProductSet] = useState("");
     const [loading, setLoading] = useState(false);
-    const { setTab, showToast } = useAppContext();
+    const { setTab, showToast, SERVER_ADDRESS } = useAppContext();
     const { theme } = useTheme();
 
     const onPressAddProductSet = async () => {
