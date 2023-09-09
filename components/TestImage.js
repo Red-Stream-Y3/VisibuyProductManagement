@@ -161,7 +161,7 @@ export const TestImage = () => {
             />
             {/* result details */}
             <Text style={{...textStyles.header1, marginTop: 5}}>Results</Text>
-            {results?.length === 0 && <Text>Take an image to start...</Text>}
+            {(results?.length === 0 && image) && <Text>Take an image to start...</Text>}
             <Button
                 onPress={() => sendImage()}
                 containerStyle={{ margin: 5, borderRadius: 5 }}
