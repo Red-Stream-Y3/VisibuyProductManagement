@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { Button, Card, Icon, Input, useTheme } from "@rneui/themed";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Image } from "react-native";
 import { containerStyles, textStyles } from "../Styles";
 import * as ImagePicker from "expo-image-picker";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
 import { useAppContext } from "../context/Context";
+import { getProductID } from "../utils/ProductUtils";
+// import RNEventSource from "react-native-event-source";
 
 export const CATEGORY = {
     HOME: "homegoods-v2",
@@ -16,10 +18,12 @@ export const CATEGORY = {
 };
 
 
-export const NewProduct = () => {
+export const NewProduct = ({editProduct, setEditSelect, setShowEdit, getProducts}) => {
     const { theme } = useTheme();
     const [dropdown, setDropdown] = React.useState("Category");
+    const [images, setImages] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [edited, setEdited] = React.useState([]);
     const {
         newProduct,
         setNewProduct,
@@ -109,6 +113,38 @@ export const NewProduct = () => {
         }
     };
 
+    const getEditItem = async () => {
+        await axios
+            .get(
+                `${SERVER_ADDRESS}/api/product/${getProductID(
+                    editProduct.displayName
+                )}/referenceimage`
+            )
+            .then((response) => {
+                setNewProduct({
+                    name: editProduct.displayName,
+                    category: "packagedgoods-v1",
+                    size: editProduct.productLabels?.filter((label) => label.key === "size")[0]?.value,
+                    price: editProduct.productLabels?.filter((label) => label.key === "price")[0]?.value,
+                    color: editProduct.productLabels?.filter((label) => label.key === "color")[0]?.value,
+                    description: editProduct.description,
+                    images: response.data.map((image) => "https://storage.googleapis.com/"+String(image.uri).split("gs://")[1]),
+                    types: response.data.map((image) =>
+                        String(image.uri).substring(String(image.uri).lastIndexOf(".") + 1)
+                    ),
+                });
+            })
+            .catch((err) => {
+                showToast(err.message);
+            });
+    };
+
+    useEffect(() => {
+        if (editProduct !== undefined && editProduct !== null) {
+            getEditItem();
+        }
+    }, []);
+
     //method to add product
     const onPressAddProduct = async () => {
         if (newProduct.name === "") {
@@ -128,51 +164,138 @@ export const NewProduct = () => {
         } else {
             setLoading(true);
 
-            //create new product request body
-            const body = {
-                name: newProduct.name,
-                category: newProduct.category,
-                price: newProduct.price,
-                size: newProduct.size,
-                color: newProduct.color,
-                description: newProduct.description,
-            };
+            try {
+                let response;
+                const formData = new FormData();
 
-            const formData = new FormData();
+                if (!editProduct) {
+                    //create new product request body
+                    const body = {
+                        name: newProduct.name,
+                        category: newProduct.category,
+                        price: newProduct.price,
+                        size: newProduct.size,
+                        color: newProduct.color,
+                        description: newProduct.description,
+                    };
 
-            //append product data to form data
-            formData.append("product", JSON.stringify(body));
+                    //append product data to form data
+                    formData.append("product", JSON.stringify(body));
 
-            //append images list to form data
-            newProduct.images.forEach((image, index) => {
-                formData.append("images", {
-                    name: `${newProduct.name
-                        .replace(/\s+/g, "-")
-                        .toLowerCase()}-image-${index}.${
-                        newProduct.types[index]
-                    }`,
-                    type: `image/${newProduct.types[index]}`,
-                    uri: image,
-                });
-            });
+                    //append images list to form data
+                    newProduct.images.forEach((image, index) => {
+                        formData.append("images", {
+                            name: `${newProduct.name
+                                .replace(/\s+/g, "-")
+                                .toLowerCase()}-image-${index}.${
+                                newProduct.types[index]
+                            }`,
+                            type: `image/${newProduct.types[index]}`,
+                            uri: image,
+                        });
+                    });
 
-            await axios
-                .post(`${SERVER_ADDRESS}/api/product`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                .then((response) => {
-                    showToast(response.data.message);
-                    resetNewProduct();
-                })
-                .catch((err) => {
-                    showToast(err.message);
-                });
-            
-            setLoading(false);
+                    response = await axios.post(
+                        `${SERVER_ADDRESS}/api/product`,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        }
+                    );
+                } else {
+                    const editBody = {
+                        name: newProduct.name,
+                    };
+                    
+                    if (edited.includes("CATEGORY")) {
+                        editBody.category = newProduct.category;
+                    }
+                    if (edited.filter((item) => item === "PRICE" || item === "SIZE" || item === "COLOR").length > 0) {
+                        editBody.price = newProduct.price;
+                        editBody.size = newProduct.size;
+                        editBody.color = newProduct.color;
+                    }
+                    if (edited.includes("DESCRIPTION")) {
+                        editBody.description = newProduct.description;
+                    }
+                    if (edited.includes("IMAGES")) {
+                        //append images list to form data
+                        newProduct.images.forEach((image, index) => {
+                            formData.append("images", {
+                                name: `${newProduct.name
+                                    .replace(/\s+/g, "-")
+                                    .toLowerCase()}-image-${index}.${
+                                    newProduct.types[index]
+                                }`,
+                                type: `image/${newProduct.types[index]}`,
+                                uri: image,
+                            });
+                        });
+                    }
+
+                    formData.append("product", JSON.stringify(editBody));
+
+                    response = await axios.put(
+                        `${SERVER_ADDRESS}/api/product/`,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        }
+                    );
+                }
+
+                if (response) {
+                    if (!response.data.error) {
+                        showToast(response.data.message);
+                        resetNewProduct();
+                        if (editProduct) {
+                            setEditSelect(null);
+                            setShowEdit(false);
+                            getProducts();
+                        }
+                    } else {
+                        showToast(
+                            response.data.error.details ||
+                                response.data.message ||
+                                response.data.error ||
+                                "Something went wrong"
+                        );
+                    }
+                } 
+
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.debug(error);
+            }
         }
     };
+
+    //eventsource for newProduct
+    // useEffect(() => {
+    //     let eventsource;
+    //     if (loading) {
+    //         eventsource = new RNEventSource(`${SERVER_ADDRESS}/api/product`);
+    //         eventsource.addEventListener ('message', (event) => {
+    //             const data = JSON.parse(event.data);
+    //             if (data.complete) {
+    //                 showToast(data.message);
+    //                 resetNewProduct();
+    //             } else {
+    //                 showToast(data.message);
+    //             }
+    //         });
+    //     }
+
+    //     return () => {
+    //         eventsource?.removeAllListeners();
+    //         eventsource?.close();
+    //     };
+    // }, []);
 
     useEffect(()=>{
         if(newProduct.category !== ""){
@@ -187,13 +310,18 @@ export const NewProduct = () => {
             <ScrollView
                 style={{ width: "100%" }}
                 contentContainerStyle={{ alignItems: "center" }}>
-                <Text style={textStyles.header1}>New Product</Text>
+                <Text style={textStyles.header1}>{editProduct ? 'Edit Product' : 'New Product'}</Text>
                 <Input
+                    editable={!editProduct}
+                    onPressIn={() => {
+                        if (editProduct) showToast("Product name cannot be edited");
+                    }}
                     value={newProduct.name}
                     style={textStyles.body}
-                    onChangeText={(text) =>
-                        setNewProduct({ ...newProduct, name: text })
-                    }
+                    onChangeText={(text) =>{
+                        setNewProduct({ ...newProduct, name: text });
+                        if (editProduct) setEdited([...edited, "NAME"]);
+                    }}
                     containerStyle={containerStyles.inputContainer}
                     placeholder="Product Name"
                 />
@@ -246,9 +374,10 @@ export const NewProduct = () => {
 
                 <Input
                     value={newProduct.price}
-                    onChangeText={(text) =>
-                        setNewProduct({ ...newProduct, price: text })
-                    }
+                    onChangeText={(text) =>{
+                        setNewProduct({ ...newProduct, price: text });
+                        if (editProduct) setEdited([...edited, "PRICE"]);
+                    }}
                     keyboardType="numeric"
                     style={textStyles.body}
                     containerStyle={containerStyles.inputContainer}
@@ -256,27 +385,30 @@ export const NewProduct = () => {
                 />
                 <Input
                     value={newProduct.size}
-                    onChangeText={(text) =>
-                        setNewProduct({ ...newProduct, size: text })
-                    }
+                    onChangeText={(text) =>{
+                        setNewProduct({ ...newProduct, size: text });
+                        if (editProduct) setEdited([...edited, "SIZE"]);
+                    }}
                     style={textStyles.body}
                     containerStyle={containerStyles.inputContainer}
                     placeholder="Size"
                 />
                 <Input
                     value={newProduct.color}
-                    onChangeText={(text) =>
-                        setNewProduct({ ...newProduct, color: text })
-                    }
+                    onChangeText={(text) =>{
+                        setNewProduct({ ...newProduct, color: text });
+                        if (editProduct) setEdited([...edited, "COLOR"]);
+                    }}
                     style={textStyles.body}
                     containerStyle={containerStyles.inputContainer}
                     placeholder="Package color"
                 />
                 <Input
                     value={newProduct.description}
-                    onChangeText={(text) =>
-                        setNewProduct({ ...newProduct, description: text })
-                    }
+                    onChangeText={(text) =>{
+                        setNewProduct({ ...newProduct, description: text });
+                        if (editProduct) setEdited([...edited, "DESCRIPTION"]);
+                    }}
                     style={textStyles.body}
                     containerStyle={containerStyles.inputContainer}
                     placeholder="Description"
@@ -323,7 +455,7 @@ export const NewProduct = () => {
                                             containerStyle={{
                                                 borderRadius: 5,
                                             }}>
-                                            <Card.Image
+                                            <Image
                                                 source={{ uri: image }}
                                                 style={{
                                                     width: 150,
@@ -344,6 +476,7 @@ export const NewProduct = () => {
                                                                 i !== index
                                                         ),
                                                     });
+                                                    if (editProduct) setEdited([...edited, "IMAGES"]);
                                                 }}
                                                 containerStyle={{
                                                     margin: 5,
@@ -376,7 +509,7 @@ export const NewProduct = () => {
                     color: theme.colors.buttonText,
                 }}>
                 { loading && <ActivityIndicator color={theme.colors.buttonText} /> }
-                Add Product
+                {editProduct ? 'Edit Product' : 'Add Product'}
             </Button>
         </View>
     );

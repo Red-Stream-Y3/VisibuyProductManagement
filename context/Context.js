@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ToastAndroid } from "react-native";
-import DeviceInfo from "react-native-device-info";
+//import DeviceInfo from "react-native-device-info";
 
 export const AppContext = React.createContext("appContext");
 
@@ -13,11 +13,11 @@ export const AppProvider = ({ children }) => {
     const BASE_SEARCH_SET_ID = "VP-supermarket";
 
     //set server address
-    useEffect(() => {
-        if(DeviceInfo.isEmulatorSync()){
-            setSERVER_ADDRESS("http://10.0.2.2:4444");
-        }
-    }, []);
+    // useEffect(() => {
+    //     if(DeviceInfo.isEmulatorSync()){
+    //         setSERVER_ADDRESS("http://10.0.2.2:4444");
+    //     }
+    // }, []);
     
     const showToast = (message) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);

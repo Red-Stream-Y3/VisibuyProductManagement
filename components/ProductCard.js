@@ -6,7 +6,7 @@ import { getProductID } from "../utils/ProductUtils";
 import { useAppContext } from "../context/Context";
 
 export const ProductCard = ({ product }) => {
-    const [images, setImages] = React.useState(null); // [image, index]
+    const [images, setImages] = React.useState(null);
     const { theme } = useTheme();
     const { SERVER_ADDRESS, showToast } = useAppContext();
 
