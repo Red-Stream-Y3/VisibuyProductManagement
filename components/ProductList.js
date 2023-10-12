@@ -7,6 +7,7 @@ import { ProductCard } from "./ProductCard";
 import { useAppContext } from "../context/Context";
 import { getProductID } from "../utils/ProductUtils";
 import { NewProduct } from "./NewProduct";
+const BASE_URL = 'https://visibuyapp-e9453e5950ca.herokuapp.com';
 
 export const ProductList = ({ products, getProducts, setLoading }) => {
     const [show, setShow] = useState(false);
@@ -27,19 +28,27 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
             return;
         };
 
-        setLoading(true);
+        try {
+            setLoading(true);
 
-        await axios.delete(`${SERVER_ADDRESS}/api/product/${getProductID(productName)}`,)
-        .then((response) => {
-            showToast(response.data.message);
-            getProducts();
-            setDeleteSelect(null);
-            setShowDelete(false);
-        }).catch((err) => {
-            showToast(err.message);
-        });
+            const mongoGet = await axios.get(`${BASE_URL}/api/v1/products/search/${productName}`);
 
-        setLoading(false);
+            const gCloud = await axios.delete(`${SERVER_ADDRESS}/api/product/${getProductID(productName)}`)
+        
+            const mongoDelete = await axios.delete(`${BASE_URL}/api/v1/products/${mongoGet.data[0]._id}`);
+            
+            if (gCloud && mongoGet && mongoDelete) {
+                showToast(`${productName} deleted`);
+                getProducts();
+                setDeleteSelect(null);
+                setShowDelete(false);
+            }
+
+            setLoading(false);
+        } catch (error) {
+            showToast(error.message);
+            setLoading(false);
+        }
     };
 
     return (
@@ -72,7 +81,7 @@ export const ProductList = ({ products, getProducts, setLoading }) => {
                             </Text>
                         </Button>
                         <Button
-                            onPress={() => onDelete(selected?.displayName)}
+                            onPress={() => onDelete(deleteSelect)}
                             containerStyle={{
                                 margin: 5,
                                 backgroundColor: theme.colors.error,

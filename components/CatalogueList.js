@@ -25,8 +25,10 @@ export const CatalogueList = ({ productList, productSets, getProductSets, setLoa
         };
 
         setLoading(true);
-
-        await axios.delete(`${SERVER_ADDRESS}/api/productset/${getProductID(productSetName)}`)
+        
+        const productSetID = getProductID(productSetName);
+        
+        await axios.delete(`${SERVER_ADDRESS}/api/productset/${productSetID}`)
         .then((response) => {
             showToast(response.data.message);
             getProductSets();
@@ -70,7 +72,7 @@ export const CatalogueList = ({ productList, productSets, getProductSets, setLoa
                             </Text>
                         </Button>
                         <Button
-                            onPress={() => onDelete(selected?.displayName)}
+                            onPress={() => onDelete(deleteSelect)}
                             containerStyle={{
                                 margin: 5,
                                 backgroundColor: theme.colors.error,
@@ -128,9 +130,9 @@ export const CatalogueList = ({ productList, productSets, getProductSets, setLoa
                                     </View>
                                     <View style={{ flexDirection: "row" }}>
                                         <Button
-                                            onPress={() =>
-                                                onDelete(productSet.displayName)
-                                            }
+                                            onPress={() =>{
+                                                onDelete(productSet.displayName);
+                                            }}
                                             containerStyle={{
                                                 margin: 5,
                                                 borderRadius: 50,

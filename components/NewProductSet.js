@@ -22,7 +22,7 @@ export const NewProductSet = () => {
         await axios.post(`${SERVER_ADDRESS}/api/productset`, {
             productSetDisplayName: productSet
         }).then((response) => {
-            showToast(response.data.message);
+            if (response.data) showToast("Product set created");
             setTab("main");
         }).catch((err) => {
             showToast(err.message);
